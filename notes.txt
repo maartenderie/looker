@@ -1,0 +1,19 @@
+install python via exe (2.7.x)
+add python to path variable (....;C:/Python27)
+python -m pip install upgrade pip
+python -m pip install numpy
+python -m pip install opencv-python (got 3.4.0.12)
+
+run this simple test from https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_image_display/py_image_display.html
+
+=====
+import numpy as np
+import cv2
+
+# Load an color image in grayscale
+img = cv2.imread('messi5.jpg',0)
+cv2.imshow('image',img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+=====
+
