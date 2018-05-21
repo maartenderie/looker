@@ -11,11 +11,10 @@ import numpy as np
 
 # PRIVATES
 def fallsWithAllowedRadius(image, r):
-    return r > 50 and r < 125
+    return 50 < r < 125
 
 
 def detectCirclesViaContours(colorImage, debug):
-    # im2 = getColorFilteredImage( colorImage , debug )
     contourImage = getContourImage(colorImage, debug)
     return detectHoughCircles(contourImage, debug)
 
@@ -23,10 +22,11 @@ def detectCirclesViaContours(colorImage, debug):
 def detectHoughCircles(im2, debug, ratioHG=1.2):
     circles = cv2.HoughCircles(im2, cv2.HOUGH_GRADIENT, ratioHG, 100.)
     circles = [] if circles is None else np.round(circles[0, :]).astype("int")
+    if debug: print "all circles found: {}".format(circles)
     # min-max radius on cv2.HoughCircles != working :(
     result = []
     for (x, y, r) in circles:
-        if (fallsWithAllowedRadius(im2, r)):
+        if fallsWithAllowedRadius(im2, r):
             result.append((x, y, r))
     return result
 
@@ -61,7 +61,7 @@ def detectCirclesViaFiltered(colorImage, expectedNrCircles, debug):
     for contour in contours[0:expectedNrCircles]:
         x, y, w, h = cv2.boundingRect(contour)
         r = int(max(w, h) / 2.0)
-        if (fallsWithAllowedRadius(colorImage, r)):
+        if fallsWithAllowedRadius(colorImage, r):
             cv2.rectangle(colorImage, (x, y), (x + w, y + h), (255, 0, 0), 3)
             xcenter = x + r
             ycenter = y + r
@@ -132,13 +132,13 @@ def refineStamp(roughStamp, debug):
     ret, thresh = cv2.threshold(filtered, 240, 255, 0)
     im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    getArcLength = lambda x: cv2.arcLength(x, closed=True)
+    getArcLength = lambda cntr: cv2.arcLength(cntr, closed=True)
     contour = max(contours, key=getArcLength)
     x, y, w, h = cv2.boundingRect(contour)
 
     r = int(max(w, h) / 2.0)
 
-    if (not fallsWithAllowedRadius(roughStamp, r)):
+    if not fallsWithAllowedRadius(roughStamp, r):
         print "Warning: found contour with unallowed radius. Ignoring"
         cv2.rectangle(roughStamp, (x, y), (x + w, y + h), (0, 0, 255), 3)
         return None
