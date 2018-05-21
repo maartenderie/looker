@@ -31,19 +31,24 @@ def getContourImage( colorImage , debug ):
   ret, thresh = cv2.threshold( img_gray , 240, 255, 0 )
   im2, contours , hierarchy = cv2.findContours( thresh , cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE )
   im2 = cv2.bitwise_not(im2)
-  #if debug: utils.display(im2)
+  if debug: utils.display(im2 , "contours")
   return im2
 
 def detectCirclesViaFiltered( colorImage , expectedNrCircles, debug ):
   lower = np.array([140,160,220], dtype = "uint8" ) #BGR
-  upper = np.array([180,220,255], dtype = "uint8" )
+  upper = np.array([200,220,255], dtype = "uint8" )
   
   filtered = cv2.inRange( colorImage, lower, upper )
-  if debug: utils.display( filtered )
+  if debug: utils.display( filtered , "filtered")
+  
+  kernel = np.ones((5,5),np.uint8)
+  filtered = cv2.morphologyEx(filtered, cv2.MORPH_CLOSE, kernel , iterations = 3)
+  utils.display( filtered , "MORPH_CLOSE" )
   
   ret, thresh = cv2.threshold( filtered , 254, 255, 0 )
   im2, contours , hierarchy = cv2.findContours( thresh , cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE )
-  contours.sort( key = cv2.contourArea, reverse = True )
+  getArcLength = lambda x: cv2.arcLength( x, closed=True )
+  contours.sort( key = getArcLength , reverse = True )
   
   result = []
   for contour in contours[0:expectedNrCircles]:
