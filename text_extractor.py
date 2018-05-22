@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from utils import display, crop, displayContoursOnGrey
 import masked
-
+import os
 
 def getTimeSymbolNames():
     digitSymbolNames = map(lambda x: "{}".format(x), range(10))
@@ -16,7 +16,7 @@ def loadSymbols(debug):
 
     result = {}
     for symbolName in symbolNames:
-        filename = "symbols\{}.png".format(symbolName)
+        filename = os.path.join("symbols", "{}.png".format(symbolName) )
         symbol = cv2.imread(filename, 0)
         result[symbolName] = symbol
     return result
@@ -169,7 +169,7 @@ def extractTexts(stamp, debug=False):
 
 def doVisualTest():
     for i in range(0, 30):
-        filename = "stamps\stamp{}.png".format(i)
+        filename = os.join.path("stamps", "stamp{}.png".format(i) )
         print "testing text extractor for {}".format(filename)
         stamp = masked.readColorImage(filename)
         extractTexts(stamp, debug=True)

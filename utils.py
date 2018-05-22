@@ -12,7 +12,9 @@ def display(originalImage, remark="", convert=False):
         #print "Displaying: {}".format(remark)
     else:
         image = originalImage
-    cv2.namedWindow('image', cv2.WINDOW_NORMAL)
+    windowName = "image: {}".format( remark )
+    cv2.namedWindow(windowName , cv2.WINDOW_NORMAL)
+    #cv2.resizeWindow(windowName , 2,3 ) 
     cv2.imshow('image', image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

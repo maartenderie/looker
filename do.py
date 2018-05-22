@@ -2,13 +2,15 @@ import stamp_detector2 as stamp_detector
 import text_extractor
 import cv2
 import utils
+import os
 
 i = 0
 debugStamps = False
 debugText = False
 
 for imageNr in range(1, 10):
-    filename = "images\gym{}.png".format(imageNr)
+    dirname = "images"
+    filename = os.path.join(dirname , "gym{}.png".format(imageNr) )
     print "= = =  parsing {}  = = =".format(filename)
     image = cv2.imread(filename)
     stamps = stamp_detector.detectStamps(image, debugStamps)
