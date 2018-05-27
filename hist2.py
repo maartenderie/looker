@@ -2,6 +2,7 @@ import cv2
 import os
 import utils
 from stamp_detector2 import detectCirclesViaFiltered
+import masked
 
 
 def writeImagesInMap(images):
@@ -35,9 +36,7 @@ def findBestMatch(histogram, references):
 
 
 def loadReferenceGyms():
-    result = {}
-    # TODO {name:histogram}
-    return result
+    return masked.getImagesFromDirInColor("references")
 
 
 def extractRoiRectFromStamp(stamp, debug):
@@ -56,30 +55,47 @@ def loadEggMask():
 def applyMask(image, mask, debug):
     h, w = mask.shape[:2]
     image = cv2.resize(image, (w, h))
-
     print "{} and {}".format(mask.shape[:2], image.shape[:2])
-
     result = cv2.bitwise_and(image, image, mask=mask)
     if debug: utils.display(result, "masked")
     return result
 
 
-def detectGymName(stamp, referenceGyms, debug=False):
+def extractMaskedRoi(stamp, debug):
     roi = extractRoiRectFromStamp(stamp, debug)
     cv2.imwrite("someRoi.png", roi)
 
     eggMask = loadEggMask()
     if debug: utils.display(eggMask, "mask")
-    filteredRoi = applyMask(roi, eggMask, debug)
-    exit(0)
+    result = applyMask(roi, eggMask, debug)
+    if debug: utils.display(result, "postMask")
+    return result
+
+
+def detectGymName(stamp, referenceGyms, debug=False):
+    filteredRoi = extractMaskedRoi(stamp, debug)
     histogram = calcHistogram(filteredRoi)
     gymName = findBestMatch(histogram, referenceGyms)
     if debug: utils.display(stamp, gymName)
+    return gymName
 
 
-def doVisualTest():  # TODO old remove?
+def extractAddSaveReferences():
+    for i in range(0, 32):
+        filename = os.path.join("stamps", "stamp{}.png".format(i))
+        stamp = masked.readColorImage(filename)
+        postMask = extractMaskedRoi(stamp, False)
+        outputFilename = os.path.join("references", "reference{}.png".format(i))
+        cv2.imwrite(outputFilename, postMask)
+
+
+def doVisualTest():
     stamp = cv2.imread(os.path.join("stamps", "stamp0.png"))
-    detectGymName(stamp, {}, True)
+    references = loadReferenceGyms()
+    referenceMap = {refName: calcHistogram(refImage)
+                    for (refName, refImage) in references.items()}
+    gymName = detectGymName(stamp, referenceMap, True)
+    print "found gym: {}".format(gymName)
 
 
 if __name__ == "__main__":
