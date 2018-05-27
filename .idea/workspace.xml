@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="82b3b29d-830d-4ce9-a6ea-33aeaff5e3fa" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/looker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/looker.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
@@ -16,6 +17,9 @@
       <change beforePath="$PROJECT_DIR$/references/poem.png" beforeDir="false" afterPath="$PROJECT_DIR$/references/poem.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/references/watertoren.png" beforeDir="false" afterPath="$PROJECT_DIR$/references/watertoren.png" afterDir="false" />
     </list>
+=======
+    <list default="true" id="82b3b29d-830d-4ce9-a6ea-33aeaff5e3fa" name="Default" comment="" />
+>>>>>>> f1b1c6b3127abefd70f019907c30c8f9287b65f2
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
