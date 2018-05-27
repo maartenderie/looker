@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="82b3b29d-830d-4ce9-a6ea-33aeaff5e3fa" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/looker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/looker.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hist.py" beforeDir="false" afterPath="$PROJECT_DIR$/hist.py" afterDir="false" />
-    </list>
+    <list default="true" id="82b3b29d-830d-4ce9-a6ea-33aeaff5e3fa" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
