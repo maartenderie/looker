@@ -5,19 +5,6 @@ from stamp_detector2 import detectCirclesViaFiltered
 import masked
 
 
-def writeImagesInMap(images):
-    for key, value in images.iteritems():
-        cv2.imwrite(key, value)
-
-
-def calcHistograms(images):
-    result = {}
-    for key, image in images.iteritems():
-        hist = calcHistogram(image)
-        result[key] = hist
-    return result
-
-
 def calcHistogram(image):
     hist = cv2.calcHist([image], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
     hist = cv2.normalize(hist, hist)
@@ -36,10 +23,14 @@ def findBestMatch(histogram, references):
     return bestMatch, roundedScore if bestMatch is not None else "No match?"
 
 
-def loadReferenceGyms():
+def loadReferenceHistograms():
     references = masked.getImagesFromDirInColor("references")
     return {refName: calcHistogram(refImage)
             for (refName, refImage) in references.items()}
+
+
+def loadReferenceImages():
+    return masked.getImagesFromDirInColor("references")
 
 
 def extractRoiRectFromStamp(stamp, debug):
@@ -64,21 +55,34 @@ def applyMask(image, mask, debug):
     return result
 
 
-def extractMaskedRoi(stamp, debug):
-    roi = extractRoiRectFromStamp(stamp, debug)
-    cv2.imwrite("someRoi.png", roi)
-
+def extractMaskedRoi(roi, debug):
     eggMask = loadEggMask()
-    if debug: utils.display(eggMask, "mask")
     result = applyMask(roi, eggMask, debug)
     if debug: utils.display(result, "postMask")
     return result
 
 
-def detectGymName(stamp, referenceGyms, debug=False):
-    filteredRoi = extractMaskedRoi(stamp, debug)
-    histogram = calcHistogram(filteredRoi)
-    gymName, score = findBestMatch(histogram, referenceGyms)
+def findBestMatchViaTemplating(maskedRoi, referenceImages):
+
+
+
+
+
+def detectGymName2( stamp, referenceImages, debug = False):
+    roiRect = extractRoiRectFromStamp(stamp, debug)
+    maskedRoi = extractMaskedRoi(roiRect, debug)
+    gymName, score = findBestMatchViaTemplating( maskedRoi, referenceImages)
+
+    if debug: utils.display(stamp, "{}:{}".format(gymName, score))
+    return gymName, score
+
+
+def detectGymName(stamp, referenceHistos, debug=False):
+    roiRect = extractRoiRectFromStamp(stamp, debug)
+    maskedRoi = extractMaskedRoi(roiRect, debug)
+    histogram = calcHistogram(maskedRoi)
+    gymName, score = findBestMatch(histogram, referenceHistos)
+
     if debug: utils.display(stamp, "{}:{}".format(gymName, score))
     return gymName, score
 
@@ -94,7 +98,7 @@ def extractAddSaveReferences():
 
 def doVisualTest():
     stamp = cv2.imread(os.path.join("stamps", "stamp0.png"))
-    referenceMap = loadReferenceGyms()
+    referenceMap = loadReferenceHistograms()
     gymName, score = detectGymName(stamp, referenceMap, True)
     print "found gym: {}".format(gymName)
 

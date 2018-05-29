@@ -20,7 +20,7 @@ for imageNr in range(1, 10):
     print "got {} stamps".format(len(stamps))
     textOffsetY = 100
 
-    referenceGyms = hist.loadReferenceGyms()
+    referenceGyms = hist.loadReferenceHistograms()
 
     stampNr = 0
 
