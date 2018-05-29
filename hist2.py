@@ -32,11 +32,14 @@ def findBestMatch(histogram, references):
         if bestScore is None or score > bestScore:
             bestScore = score
             bestMatch = refName
-    return bestMatch if bestMatch is not None else "No match?"
+    roundedScore = round(bestScore, 2)
+    return bestMatch, roundedScore if bestMatch is not None else "No match?"
 
 
 def loadReferenceGyms():
-    return masked.getImagesFromDirInColor("references")
+    references = masked.getImagesFromDirInColor("references")
+    return {refName: calcHistogram(refImage)
+            for (refName, refImage) in references.items()}
 
 
 def extractRoiRectFromStamp(stamp, debug):
@@ -75,9 +78,9 @@ def extractMaskedRoi(stamp, debug):
 def detectGymName(stamp, referenceGyms, debug=False):
     filteredRoi = extractMaskedRoi(stamp, debug)
     histogram = calcHistogram(filteredRoi)
-    gymName = findBestMatch(histogram, referenceGyms)
-    if debug: utils.display(stamp, gymName)
-    return gymName
+    gymName, score = findBestMatch(histogram, referenceGyms)
+    if debug: utils.display(stamp, "{}:{}".format(gymName, score))
+    return gymName, score
 
 
 def extractAddSaveReferences():
@@ -91,10 +94,8 @@ def extractAddSaveReferences():
 
 def doVisualTest():
     stamp = cv2.imread(os.path.join("stamps", "stamp0.png"))
-    references = loadReferenceGyms()
-    referenceMap = {refName: calcHistogram(refImage)
-                    for (refName, refImage) in references.items()}
-    gymName = detectGymName(stamp, referenceMap, True)
+    referenceMap = loadReferenceGyms()
+    gymName, score = detectGymName(stamp, referenceMap, True)
     print "found gym: {}".format(gymName)
 
 

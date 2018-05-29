@@ -8,14 +8,15 @@ def display(originalImage, remark="", convert=False):
         else:
             image = originalImage.copy()
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(image, remark, (10, 50), font, 1, (0, 0, 255), 1, cv2.LINE_AA)
+        cv2.putText(image, remark, (10, 10), font, 1, (0, 0, 255), 1, cv2.LINE_AA)
         #print "Displaying: {}".format(remark)
     else:
         image = originalImage
     windowName = "image: {}".format( remark )
     cv2.namedWindow(windowName , cv2.WINDOW_NORMAL)
-    #cv2.resizeWindow(windowName , 2,3 ) 
-    cv2.imshow('image', image)
+    cv2.resizeWindow(windowName , 400,750 )
+    cv2.moveWindow(windowName , 20,20)
+    cv2.imshow( windowName, image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
